@@ -1,0 +1,38 @@
+<?php
+
+class Melody {
+
+  // Create the pattern
+  public function __construct($progression = '0', $bassline) {
+    $this->melody_patterns = $this->get_melody_patterns($progression, $bassline);
+    $this->melody_one = $this->melody_patterns[0];
+    $this->melody_two = $this->melody_patterns[1];
+    $this->melody_three = $this->melody_patterns[2];
+  }
+
+  public function get_melody_patterns($progression = '0', $bassline) {
+
+    // Randomly generate a progression if one does not exist
+    if ($progression == '0') {
+      // Load the progression class
+      include_once("progression.class");
+      // Get a progression
+      $progression = new Progression();
+    }
+
+    // Initialize our return array
+    $melody_one = array();
+    $melody_two = array();
+    $melody_three = array();
+
+    $melody_patterns = array();
+    $melody_patterns[] = $melody_one;
+    $melody_patterns[] = $melody_two;
+    $melody_patterns[] = $melody_three;
+
+    return $melody_patterns;
+  }
+
+}
+
+?>

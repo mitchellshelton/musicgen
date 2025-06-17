@@ -1,0 +1,221 @@
+body {
+  @extend %sans-serif;
+  @include fontsize($base-font-size);
+  background-color: $c-off-white;
+  color: $c-off-black;
+  margin: 0;
+  padding: 0;
+  line-height: 1.6;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+.main {
+
+}
+
+.main-content {
+
+}
+
+.header {
+  background-color: $c-off-white;
+  color: $c-off-black;
+  position: fixed;
+  width: 100%;
+  display: block;
+  z-index: 99;
+}
+
+.header-content {
+  margin: 0 auto;
+  width: 100%;
+  max-width: 1024px;
+}
+
+.site-title {
+  float: left;
+  padding-left: 1em;
+  a {
+    @include fontsize(28);
+    @extend %serif;
+    @extend %bold;
+    text-decoration: none;
+    color: $c-off-black;
+  }
+  @include breakpoint($bp-tiny) {
+
+    a {
+      @include fontsize(28);
+    }
+  }
+}
+
+.navigation-toggle {
+  float: right;
+  line-height: 5;
+  margin-right: 1em;
+  a {
+    text-decoration: none;
+    text-transform: uppercase;
+    color: $c-off-black;
+  }
+  @include breakpoint($bp-tiny) {
+    display: none;
+  }
+}
+
+.navigation {
+  @include breakpoint($bp-tiny) {
+    float: right;
+  }
+  &.hidden {
+    display: none;
+    @include breakpoint($bp-tiny) {
+      display: block;
+    }
+  }
+}
+
+.navigation-list {
+  margin: 0;
+  padding: 0;
+  clear: both;
+  @include breakpoint($bp-tiny) {
+    clear: none;
+    display: block;
+  }
+}
+
+.navigation-item {
+  list-style-type: none;
+  margin-right: 1em;
+  @include breakpoint($bp-tiny) {
+    float: left;
+    padding: 1.5em 0;
+  }
+}
+
+.navigation-link {
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+  color: $c-off-black;
+  display: block;
+  padding: 1em;
+  &:hover {
+    @include transition();
+    color: $c-black;
+  }
+  @include breakpoint($bp-tiny) {
+    padding: 0;
+    text-align: left;
+  }
+}
+
+.title-section-background,
+.intro-section-background,
+.builder-section-background,
+.footer-background {
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  height: 100%;
+  width: 100%;
+}
+
+.title-section-background {
+  background-image: url('../images/elektron-anim-01.gif');
+}
+
+.intro-section-background {
+  background-image: url('../images/elektron-bg-02.jpg');
+  background-position: center 0;
+}
+
+.builder-section-background {
+  background-image: url('../images/elektron-bg-05.jpg');
+  background-position: center 0;
+}
+
+.title-section-content,
+.intro-section-content,
+.builder-section-content {
+  background-color: $c-black;
+  background-color: rgba($c-black, 0.8);
+  color: $c-white;
+  text-align: center;
+  padding: 10em 1em 10em 1em;
+  @include breakpoint($bp-tiny) {
+    padding: 15em 5em 15em 5em;
+  }
+}
+
+.intro-section-content,
+.builder-section-content {
+  padding: 1em;
+  @include breakpoint($bp-tiny) {
+    padding: 5em;
+  }
+}
+
+.title-section-title,
+.intro-section-title,
+.builder-section-title {
+  @include fontsize(32);
+  @extend %serif;
+  @extend %bold;
+  @include breakpoint($bp-tiny) {
+    @include fontsize(48);
+  }
+}
+
+.site-title {
+  @include fontsize(24);
+  text-align: center;
+  @include breakpoint($bp-tiny) {
+    text-align: left;
+    padding-left: 1em;
+  }
+}
+
+.intro-section-description {
+  text-align: left;
+  line-height: 1.8;
+  margin: 0 auto;
+  width: 100%;
+  max-width: 600px;
+  padding-bottom: 400px;
+}
+
+.builder-wrapper {
+  margin: 0 auto;
+  width: 100%;
+  max-width: 1024px;
+}
+
+.builder {
+  padding: 1em;
+  text-align: left;
+}
+
+.footer {
+  background-color: $c-black;
+}
+
+.footer-content {
+  margin: 0 auto;
+  width: 100%;
+  max-width: 1024px;
+}
+
+.footer-copyright {
+  margin: 0;
+  padding: 2em;
+  text-align: center;
+  color: $c-off-white;
+}

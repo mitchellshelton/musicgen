@@ -1,0 +1,35 @@
+<?php
+
+class Dice {
+
+    // Roll the dice
+    public function roll($num = 1, $sides = 2) {
+        // Handle incorrect dice or sides
+        if ($num == 0) { // Is the quantity zero?
+            // There must be at least one die
+            $num = 1;
+        }
+        if ($sides == 0) { // Is the quantity zero?
+            // Any die must have at least one side
+            $sides = 1;
+        }
+
+        // Initialize our return value
+        $result = 0;
+
+        // Loop over the die rolls
+        for ($i=0; $i < $num; $i++) {
+            // Roll the die
+            $roll_result = mt_rand(1, $sides);
+
+            // Add the die roll to our total result
+            $result = $result + $roll_result;
+        }
+
+        // Return the result of our roll
+        return $result;
+    }
+
+}
+
+?>

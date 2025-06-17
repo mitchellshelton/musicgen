@@ -1,0 +1,87 @@
+<?php
+
+class Backing {
+
+  // Create the pattern
+  public function __construct($progression = '0', $bassline) {
+    $this->pattern = $this->get_backing_pattern($progression, $bassline);
+  }
+
+  public function get_backing_pattern($progression = '0', $bassline) {
+
+    // Randomly generate a progression if one does not exist
+    if ($progression == '0') {
+      // Load the progression class
+      include_once("progression.class");
+      // Get a progression
+      $progression = new Progression();
+    }
+
+    // Initialize our return array
+    $pattern = array();
+
+    $root_note = array();
+    $third_note = array();
+    $fifth_note = array();
+    // Get the notes from the chord
+    for ($i = 0; $i < count($progression->progression['progression']); $i++) {
+      $root_note[] = $progression->progression['properties']['chords'][$i][0];
+      $third_note[] = $progression->progression['properties']['chords'][$i][1];
+      $fifth_note[] = $progression->progression['properties']['chords'][$i][2];
+    }
+
+    // Build the backing from the bassline
+    /* NOTE: This is always assuming a 4 chord progression, we will need to fix that */
+    for($i = 0; $i < 16; $i++) {
+
+      if ($bassline['measure_one'][$i] !== 0) {
+        $pattern['measure_one']['root'][$i] = $root_note[0];
+        $pattern['measure_one']['third'][$i] = $third_note[0];
+        $pattern['measure_one']['fifth'][$i] = $fifth_note[0];
+      }
+      else {
+        $pattern['measure_one']['root'][$i] = 0;
+        $pattern['measure_one']['third'][$i] = 0;
+        $pattern['measure_one']['fifth'][$i] = 0;
+      }
+
+      if ($bassline['measure_two'][$i] !== 0) {
+        $pattern['measure_two']['root'][$i] = $root_note[1];
+        $pattern['measure_two']['third'][$i] = $third_note[1];
+        $pattern['measure_two']['fifth'][$i] = $fifth_note[1];
+      }
+      else {
+        $pattern['measure_two']['root'][$i] = 0;
+        $pattern['measure_two']['third'][$i] = 0;
+        $pattern['measure_two']['fifth'][$i] = 0;
+      }
+
+      if ($bassline['measure_three'][$i] !== 0) {
+        $pattern['measure_three']['root'][$i] = $root_note[2];
+        $pattern['measure_three']['third'][$i] = $third_note[2];
+        $pattern['measure_three']['fifth'][$i] = $fifth_note[2];
+      }
+      else {
+        $pattern['measure_three']['root'][$i] = 0;
+        $pattern['measure_three']['third'][$i] = 0;
+        $pattern['measure_three']['fifth'][$i] = 0;
+      }
+
+      if ($bassline['measure_four'][$i] !== 0) {
+        $pattern['measure_four']['root'][$i] = $root_note[3];
+        $pattern['measure_four']['third'][$i] = $third_note[3];
+        $pattern['measure_four']['fifth'][$i] = $fifth_note[3];
+      }
+      else {
+        $pattern['measure_four']['root'][$i] = 0;
+        $pattern['measure_four']['third'][$i] = 0;
+        $pattern['measure_four']['fifth'][$i] = 0;
+      }
+    }
+
+    return $pattern;
+  }
+
+}
+
+?>

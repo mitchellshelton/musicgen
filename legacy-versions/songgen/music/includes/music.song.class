@@ -1,0 +1,561 @@
+<?php
+
+class Song {
+
+  public $xml_file = array();
+
+  public function __construct($chord, $bass, $melody) {
+    $this->chord = $chord;
+    $this->bass = $bass;
+    $this->melody = $melody;
+    $this->xml_file = $this->xml_builder();
+  }
+
+  /**
+   * Construct a song by provided melodies, bass lines, and chords
+   */
+  public function song_builder() {
+    $complete_song = 'Song tester';
+
+    $array_preview = 1;
+    if ($array_preview == 1) {
+      print '<pre>';
+      print 'Progression: ';
+      print '<br />';
+      print_r($this->chord['progression']);
+      print '<br /><br />';
+      print 'Key: ';
+      print '<br />';
+      print_r($this->chord['properties']['key']);
+      print '<br /><br />';
+      print 'Length: ';
+      print '<br />';
+      print_r($this->chord['properties']['length']);
+      print '<br /><br />';
+      print 'Chords: ';
+      print '<br />';
+      print_r($this->chord['properties']['chords']);
+      print '<br /><br />';
+      print 'Bass: ';
+      print '<br />';
+      print_r($this->bass);
+      print '<br /><br />';
+      print 'Melody: ';
+      print '<br />';
+      print_r($this->melody);
+      print '<br /><br />';
+      print '</pre>';
+    }
+
+
+
+    return $complete_song;
+  }
+
+  public function xml_builder() {
+    // Initialize the XML variable
+    $xml = '';
+
+    // Add the MusicXML header
+    $xml .= '
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE score-partwise PUBLIC "-//Recordare//DTD MusicXML 2.0 Partwise//EN" "http://www.musicxml.org/dtds/partwise.dtd">
+<score-partwise>
+  <identification>
+    <encoding>
+      <encoding-date>' . date('Y-m-d') . '</encoding-date>
+    </encoding>
+  </identification>
+    ';
+    // Remove extra spaces from the xml
+    $xml = trim($xml);
+
+    // The the instrument list
+    $instruments = $this->instrument_list();
+
+    // Initialize the parts place holder
+    $parts = '';
+    for ($i = 0; $i < count($instruments); $i++) {
+      // Populate each part
+      $parts .= '
+    <score-part id="' . $instruments[$i]['id'] . '">
+      <part-name>' . $instruments[$i]['name'] . '</part-name>
+      <part-abbreviation>' . $instruments[$i]['abbreviation'] . '</part-abbreviation>
+      <score-instrument id="' . $instruments[$i]['part_id'] . '">
+        <instrument-name>' . $instruments[$i]['name'] . '</instrument-name>
+      </score-instrument>
+      <midi-instrument id="' . $instruments[$i]['part_id'] . '">
+        <midi-channel>' . $instruments[$i]['midi_channel'] . '</midi-channel>
+        <midi-program>' . $instruments[$i]['midi_program'] . '</midi-program>
+        <volume>' . $instruments[$i]['volume'] . '</volume>
+        <pan>0</pan>
+      </midi-instrument>
+    </score-part>
+      ';
+      // Remove extra spaces from the xml
+      $parts = trim($parts);
+    }
+
+    // Output the part list
+    $xml .= '
+  <part-list>
+    ' . $parts . '
+  </part-list>
+    ';
+    // Remove extra spaces from the xml
+    $xml = trim($xml);
+
+    // Get the measures
+    $measures = $this->measure_builder();
+    // Append the measures to our XML
+    $xml .= $measures;
+    // Remove extra spaces from the xml
+    $xml = trim($xml);
+
+    // Return the completed XML
+    return $xml;
+  }
+
+  public function measure_builder() {
+
+    // Initialize the XML holder
+    $xml = '';
+
+    // Add attributes for the measure
+    $measure_attributes = '
+      <attributes>
+        <divisions>1</divisions>
+        <key>
+          <fifths>0</fifths>
+          <mode>major</mode>
+          </key>
+        <time>
+          <beats>4</beats>
+          <beat-type>4</beat-type>
+          </time>
+        <staves>2</staves>
+        <clef number="1">
+          <sign>G</sign>
+          <line>2</line>
+          </clef>
+        <clef number="2">
+          <sign>F</sign>
+          <line>4</line>
+          </clef>
+      </attributes>
+    ';
+    // Remove extra spaces from the xml
+    $measure_attributes = trim($measure_attributes);
+
+    // The the instrument list
+    $instruments = $this->instrument_list();
+
+    // Loop over the tracks
+    for ($i = 0; $i < count($instruments); $i++) {
+      // Get the notes for the current track
+      $notes = $this->note_builder($instruments[$i]['id']);
+
+      // Poplulate the XML
+      $xml .= '
+
+    <part id="' . $instruments[$i]['id'] . '">
+      <measure number="1">
+      ' . $measure_attributes . '
+      ' . $notes . '
+      </measure>
+    </part>
+      ';
+
+      // Remove extra spaces from the xml
+      $xml = trim($xml);
+    }
+
+    // Return the XML
+    return $xml;
+  }
+
+  public function note_builder($instrument_id) {
+
+    // Initialize the XML holder
+    $xml = '';
+
+    $chords = $this->chord['properties']['chords'];
+
+    for($i = 0; $i<count($chords); $i++) {
+      // Root
+      $root = $chords[$i][0];
+      $root_parts = explode('', $root);
+      if (count($root_parts) < 1 && $root_parts[1] == 'b') {
+        $root_alter = '<alter>-1</alter>'; // Flat note alter
+      }
+      else if (count($root_parts) < 1 && $root_parts[1] == '#') {
+        $root_alter = '<alter>1</alter>'; // Sharp note alter
+      }
+      else {
+        $root_alter = ''; // No alter
+      }
+
+      // Third
+      $third = $chords[$i][1];
+      $third_parts = explode('', $third);
+      if (count($third_parts) < 1 && $third_parts[1] == 'b') {
+        $third_alter = -1; // Flat note alter
+      }
+      else if (count($third_parts) < 1 && $third_parts[1] == '#') {
+        $third_alter = 1; // Sharp note alter
+      }
+
+      // Fifth
+      $fifth = $chords[$i][2];
+      $fifth_parts = explode('', $fifth);
+      if (count($fifth_parts) < 1 && $fifth_parts[1] == 'b') {
+        $fifth_alter = -1; // Flat note alter
+      }
+      else if (count($fifth_parts) < 1 && $fifth_parts[1] == '#') {
+        $fifth_alter = 1; // Sharp note alter
+      }
+
+      $xml .= '
+      <note>
+        </chord>
+        <pitch>
+          <step>' . $root_parts[0] . '</step>
+          ' . $root_alter . '
+          <octave>4</octave>
+          </pitch>
+        <duration>1</duration>
+        <voice>1</voice>
+        <type>whole</type>
+        <stem>up</stem>
+        <staff>1</staff>
+      </note>
+      <note>
+        </chord>
+        <pitch>
+          <step>' . $third_parts[0] . '</step>
+          ' . $third_alter . '
+          <octave>4</octave>
+          </pitch>
+        <duration>1</duration>
+        <voice>1</voice>
+        <type>whole</type>
+        <stem>up</stem>
+        <staff>1</staff>
+      </note>
+      <note>
+        </chord>
+        <pitch>
+          <step>' . $fith_parts[0] . '</step>
+          ' . $fifth_alter . '
+          <octave>4</octave>
+          </pitch>
+        <duration>1</duration>
+        <voice>1</voice>
+        <type>whole</type>
+        <stem>up</stem>
+        <staff>1</staff>
+      </note>
+      ';
+    }
+
+    return $xml;
+
+  }
+
+  public function instrument_list() {
+    // Create a list of instruments
+    $instruments = array();
+    /**
+     * The following should be updated in the future to call from a class and generate a list of instruments based on that.
+     */
+    // $instruments[0]['id'] = ''; // Instrument Part ID, sequential in file ex: "P1"
+    // $instruments[0]['part_id'] = ''; // usually id followed by I ex: "P1-I"
+    // $instruments[0]['name'] = '';
+    // $instruments[0]['abbreviation'] = ''; // 5 letters
+    // $instruments[0]['midi_channel'] = ''; // channels 1-16
+    // $instruments[0]['midi_program'] = '';
+    // $instruments[0]['volume'] = ''; // volume range between 1-128
+
+    // Chord
+    $instruments[0]['id'] = 'P1';
+    $instruments[0]['name'] = 'Chord';
+    $instruments[0]['abbreviation'] = 'Chord';
+    $instruments[0]['part_id'] = $instruments[0]['id'] . '-I';
+    $instruments[0]['midi_channel'] = 1;
+    $instruments[0]['midi_program'] = 1; // Piano
+    $instruments[0]['volume'] = '128';
+
+    // Bass
+    $instruments[1]['id'] = 'P2';
+    $instruments[1]['name'] = 'Bass';
+    $instruments[1]['abbreviation'] = 'Bass';
+    $instruments[1]['part_id'] = $instruments[1]['id'] . '-I';
+    $instruments[1]['midi_channel'] = 2;
+    $instruments[1]['midi_program'] = 33; // Acoustic Bass
+    $instruments[1]['volume'] = '128';
+
+    // Melody 1
+    $instruments[2]['id'] = 'P3';
+    $instruments[2]['name'] = 'Melody 1';
+    $instruments[2]['abbreviation'] = 'M1';
+    $instruments[2]['part_id'] = $instruments[2]['id'] . '-I';
+    $instruments[2]['midi_channel'] = 3;
+    $instruments[2]['midi_program'] = 9; // Celesta
+    $instruments[2]['volume'] = '128';
+
+    // Melody 2
+    $instruments[3]['id'] = 'P4';
+    $instruments[3]['name'] = 'Melody 2';
+    $instruments[3]['abbreviation'] = 'M2';
+    $instruments[3]['part_id'] = $instruments[3]['id'] . '-I';
+    $instruments[3]['midi_channel'] = 4;
+    $instruments[3]['midi_program'] = 10; // Glockenspiel
+    $instruments[3]['volume'] = '128';
+
+    // Melody 3
+    $instruments[4]['id'] = 'P5';
+    $instruments[4]['name'] = 'Melody 3';
+    $instruments[4]['abbreviation'] = 'M3';
+    $instruments[4]['part_id'] = $instruments[4]['id'] . '-I';
+    $instruments[4]['midi_channel'] = 5;
+    $instruments[4]['midi_program'] = 11; // Music Box
+    $instruments[4]['volume'] = '128';
+
+    // Kick Drum
+    $instruments[5]['id'] = 'P6';
+    $instruments[5]['name'] = 'Kick Drum';
+    $instruments[5]['abbreviation'] = 'Kick';
+    $instruments[5]['part_id'] = $instruments[5]['id'] . '-I';
+    $instruments[5]['midi_channel'] = 10;
+    $instruments[5]['midi_program'] = 1; // Note 35
+    $instruments[5]['volume'] = '128';
+
+    // Snare Drum
+    $instruments[6]['id'] = 'P7';
+    $instruments[6]['name'] = 'Snare Drum';
+    $instruments[6]['abbreviation'] = 'Snare';
+    $instruments[6]['part_id'] = $instruments[6]['id'] . '-I';
+    $instruments[6]['midi_channel'] = 10;
+    $instruments[6]['midi_program'] = 1; // Note 38
+    $instruments[6]['volume'] = '128';
+
+    // Closed Hi-Hat
+    $instruments[7]['id'] = 'P8';
+    $instruments[7]['name'] = 'Closed Hi-Hat';
+    $instruments[7]['abbreviation'] = 'Closed HH';
+    $instruments[7]['part_id'] = $instruments[7]['id'] . '-I';
+    $instruments[7]['midi_channel'] = 10;
+    $instruments[7]['midi_program'] = 1; // Note 42
+    $instruments[7]['volume'] = '128';
+
+    // Open Hi-Hat
+    $instruments[8]['id'] = 'P9';
+    $instruments[8]['name'] = 'Open Hi-Hat';
+    $instruments[8]['abbreviation'] = 'Open HH';
+    $instruments[8]['part_id'] = $instruments[8]['id'] . '-I';
+    $instruments[8]['midi_channel'] = 10;
+    $instruments[8]['midi_program'] = 1; // Note 46
+    $instruments[8]['volume'] = '128';
+
+    // Return the array of instruments
+    return $instruments;
+  }
+
+}
+
+/*
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE score-partwise PUBLIC "-//Recordare//DTD MusicXML 2.0 Partwise//EN" "http://www.musicxml.org/dtds/partwise.dtd">
+<score-partwise>
+  <identification>
+    <encoding>
+      <encoding-date>2014-09-10</encoding-date>
+    </encoding>
+  </identification>
+  <part-list>
+    <score-part id="P1">
+      <part-name>Piano</part-name>
+      <part-abbreviation>Pno</part-abbreviation>
+      <score-instrument id="P1-I">
+        <instrument-name>Piano</instrument-name>
+      </score-instrument>
+      <midi-instrument id="P1-I">
+        <midi-channel>1</midi-channel>
+        <midi-program>1</midi-program>
+        <volume>128</volume>
+        <pan>0</pan>
+      </midi-instrument>
+    </score-part>
+    <score-part id="P2">
+      <part-name>Keyboard Synthesizer</part-name>
+      <part-abbreviation>Synth</part-abbreviation>
+      <score-instrument id="P2-I">
+        <instrument-name>Keyboard Synthesizer</instrument-name>
+      </score-instrument>
+      <midi-instrument id="P2-I">
+        <midi-channel>2</midi-channel>
+        <midi-program>2</midi-program>
+        <volume>128</volume>
+        <pan>0</pan>
+      </midi-instrument>
+    </score-part>
+  </part-list>
+  <part id="P1">
+    <measure number="1">
+      <attributes>
+        <divisions>1</divisions>
+        <key>
+          <fifths>0</fifths>
+          <mode>major</mode>
+          </key>
+        <time>
+          <beats>4</beats>
+          <beat-type>4</beat-type>
+          </time>
+        <staves>2</staves>
+        <clef number="1">
+          <sign>G</sign>
+          <line>2</line>
+          </clef>
+        <clef number="2">
+          <sign>F</sign>
+          <line>4</line>
+          </clef>
+        </attributes>
+      <note>
+        <pitch>
+          <step>C</step>
+          <octave>4</octave>
+          </pitch>
+        <duration>1</duration>
+        <voice>1</voice>
+        <type>quarter</type>
+        <stem>up</stem>
+        <staff>1</staff>
+      </note>
+      <note>
+        <pitch>
+          <step>C</step>
+          <octave>4</octave>
+          </pitch>
+        <duration>1</duration>
+        <voice>1</voice>
+        <type>quarter</type>
+        <stem>up</stem>
+        <staff>1</staff>
+      </note>
+      <note>
+        <pitch>
+          <step>C</step>
+          <octave>4</octave>
+          </pitch>
+        <duration>1</duration>
+        <voice>1</voice>
+        <type>quarter</type>
+        <stem>up</stem>
+        <staff>1</staff>
+      </note>
+      <note>
+        <pitch>
+          <step>C</step>
+          <octave>4</octave>
+          </pitch>
+        <duration>1</duration>
+        <voice>1</voice>
+        <type>quarter</type>
+        <stem>up</stem>
+        <staff>1</staff>
+      </note>
+      <backup>
+        <duration>4</duration>
+        </backup>
+      <note>
+        <rest/>
+        <duration>4</duration>
+        <voice>5</voice>
+        <staff>2</staff>
+        </note>
+      </measure>
+    </part>
+  <part id="P2">
+    <measure number="1" width="162.86">
+      <attributes>
+        <divisions>1</divisions>
+        <key>
+          <fifths>0</fifths>
+          <mode>major</mode>
+          </key>
+        <time>
+          <beats>4</beats>
+          <beat-type>4</beat-type>
+          </time>
+        <staves>2</staves>
+        <clef number="1">
+          <sign>G</sign>
+          <line>2</line>
+          </clef>
+        <clef number="2">
+          <sign>F</sign>
+          <line>4</line>
+          </clef>
+        </attributes>
+      <note>
+        <pitch>
+          <step>G</step>
+          <octave>4</octave>
+          </pitch>
+        <duration>1</duration>
+        <voice>1</voice>
+        <type>quarter</type>
+        <stem>up</stem>
+        <staff>1</staff>
+      </note>
+      <note>
+        <pitch>
+          <step>G</step>
+          <octave>4</octave>
+          </pitch>
+        <duration>1</duration>
+        <voice>1</voice>
+        <type>quarter</type>
+        <stem>up</stem>
+        <staff>1</staff>
+      </note>
+      <note>
+        <pitch>
+          <step>G</step>
+          <octave>4</octave>
+          </pitch>
+        <duration>1</duration>
+        <voice>1</voice>
+        <type>quarter</type>
+        <stem>up</stem>
+        <staff>1</staff>
+      </note>
+      <note>
+        <pitch>
+          <step>G</step>
+          <octave>4</octave>
+          </pitch>
+        <duration>1</duration>
+        <voice>1</voice>
+        <type>quarter</type>
+        <stem>up</stem>
+        <staff>1</staff>
+      </note>
+      <backup>
+        <duration>4</duration>
+        </backup>
+      <note>
+        <rest/>
+        <duration>4</duration>
+        <voice>5</voice>
+        <staff>2</staff>
+        </note>
+      </measure>
+    </part>
+  </score-partwise>
+
+
+*/

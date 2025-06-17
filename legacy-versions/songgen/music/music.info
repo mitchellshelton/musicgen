@@ -1,0 +1,6 @@
+; $Id$
+name = Music
+description = A module for randomly generating MIDI files for juncmodule
+core = 7.x
+package = juncmodule
+version = 7.x-0.0.1

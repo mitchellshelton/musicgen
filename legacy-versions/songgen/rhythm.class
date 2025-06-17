@@ -1,0 +1,110 @@
+<?php
+
+class Rhythm {
+
+  // Create the rhythm
+  public function __construct($progression = '0', $drum_pattern = '0') {
+    $this->pattern = $this->get_rhythm($progression, $drum_pattern);
+  }
+
+  public function get_rhythm($progression = '0', $drum_pattern = '0') {
+
+    // Randomly generate a progression if one does not exist
+    if ($progression == '0') {
+      // Load the progression class
+      include_once("progression.class");
+      // Get a progression
+      $progression = new Progression();
+    }
+
+    // Randomly load a drum pattern if one does not exist
+    if ($drum_pattern == '0') {
+      // Load the drums class
+      include_once("drums.class");
+      // Get the drum patterns
+      $drum = new Drums();
+      // Load the drum patterns object into a variable
+      $drum_patterns = $drum->patterns;
+
+      // Randomly select a drum pattern
+      $selected_drum_position = $drum->random_drum_selector();
+
+      // Select a drum pattern
+      $drum_pattern = $drum_patterns[$selected_drum_position];
+    }
+
+    // Generate our rhythm
+    /**
+     * What follows is pretty random and smashed together. My goal at this point is to stop fighting with theory and finish as much
+     * of the program structure as possible. Below I use the kick, snare, open hi hat, and bjorklund algorithm to generate a pattern
+     * for the rhythm and accompanying accents that the bassline, backing, and melody will use.
+     */
+    $rhythm = array();
+
+                                // | 01 02 03 04 | 05 06 07 08 | 09 10 11 12 | 13 14 15 16 |
+    $rhythm['measure_one'] = array(  0, 0, 0, 0,   0, 0, 0, 0,   0, 0, 0, 0,   0, 0, 0, 0);
+    $rhythm['measure_two'] = $rhythm['measure_one'];
+    $rhythm['measure_three'] = $rhythm['measure_one'];
+    $rhythm['measure_four'] = $rhythm['measure_one'];
+
+    // Get the kick line
+    $drum_kick = $drum_pattern['kick'];
+    // Get the snare line
+    $drum_snare = $drum_pattern['snare'];
+    // Get the open hihat line
+    $drum_open_hihat = $drum_pattern['open_hihat'];
+
+    // Build the rhythm from snare and open hihat
+    for($i = 0; $i < 16; $i++) {
+      if ($drum_snare['measure_one'][$i] == 1 || $drum_open_hihat['measure_one'][$i] == 1) {
+        $rhythm['measure_one'][$i] = 2;
+      }
+      if ($drum_snare['measure_two'][$i] == 1 || $drum_open_hihat['measure_two'][$i] == 1) {
+        $rhythm['measure_two'][$i] = 2;
+      }
+      if ($drum_snare['measure_three'][$i] == 1 || $drum_open_hihat['measure_three'][$i] == 1) {
+        $rhythm['measure_three'][$i] = 2;
+      }
+      if ($drum_snare['measure_four'][$i] == 1 || $drum_open_hihat['measure_four'][$i] == 1) {
+        $rhythm['measure_four'][$i] = 2;
+      }
+    }
+
+    // Load the bjorklund class
+    include_once("bjorklund.class");
+    $bjorklund = new Bjorklund(16, 4);
+    $bjorklund_pattern = $bjorklund->pattern;
+
+    // Build the rhythm from the bjorklund pattern
+    for($i = 0; $i < 16; $i++) {
+      if ($bjorklund_pattern[$i] == 1) {
+        $rhythm['measure_one'][$i] = 3;
+        $rhythm['measure_two'][$i] = 3;
+        $rhythm['measure_three'][$i] = 3;
+        $rhythm['measure_four'][$i] = 3;
+      }
+    }
+
+    // Build the rhythm from the kick
+    for($i = 0; $i < 16; $i++) {
+      if ($drum_kick['measure_one'][$i] == 1) {
+        $rhythm['measure_one'][$i] = 1;
+      }
+      if ($drum_kick['measure_two'][$i] == 1) {
+        $rhythm['measure_two'][$i] = 1;
+      }
+      if ($drum_kick['measure_three'][$i] == 1) {
+        $rhythm['measure_three'][$i] = 1;
+      }
+      if ($drum_kick['measure_four'][$i] == 1) {
+        $rhythm['measure_four'][$i] = 1;
+      }
+    }
+
+    // Return the rhythm pattern
+    return $rhythm;
+  }
+
+}
+
+?>

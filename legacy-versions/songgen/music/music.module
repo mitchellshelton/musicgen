@@ -1,0 +1,123 @@
+<?php
+/**
+ * @file
+ * A module for randomly generating MIDI files for juncmodule
+ */
+
+/**
+ *
+ * Implements hook_help().
+ *
+ * Module help page
+ */
+function music_help($path, $arg) {
+
+  // Declare output variable
+  $output = '';
+
+  // provide help for the module
+  switch ($path) {
+    case "admin/help#music":
+      $output = t('
+        <p>A module for randomly generating MIDI files for juncmodule</p>
+      ');
+      break;
+  }
+
+  // Return the output
+  return $output;
+} // function music_help($path, $arg)
+
+/**
+ *
+ * Implements hook_menu().
+ *
+ * Menu items for module
+ */
+function music_menu() {
+
+  // Declare the menu items variable
+  $items = array();
+
+  // Define the administration page for the music module
+  $items['admin/config/system/music'] = array(
+    'title' => 'Music',
+    'description' => 'Administer the music module.',
+    'file' => 'includes/music.admin.inc',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('music_admin_select_form'),
+    'access arguments' => array('administer music'),
+    'type' => MENU_NORMAL_ITEM,
+    'weight' => 1,
+  );
+
+  // Define the administration page for the music module
+  $items['music/progression'] = array(
+    'title' => 'Chord Progression',
+    'description' => 'Build a Chord Progression.',
+    'file' => 'includes/music.progression.inc',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('music_progression_form'),
+    'access arguments' => array('administer music'),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 2,
+  );
+
+  // Define the administration page for the music module
+  $items['music/generator'] = array(
+    'title' => 'Music Generator',
+    'description' => 'Generate a song.',
+    'file' => 'includes/music.generator.inc',
+    'page callback' => array('music_generator'),
+    'access arguments' => array('administer music'),
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 3,
+  );
+
+  // Return the menu items
+  return $items;
+} // function music_menu()
+
+/**
+ * Implements hook_block_info().
+ */
+function music_block_info() {
+
+  // Define the block
+  $blocks['music_navigation_block'] = array(
+    'info' => t('Music Navigation'), //The name that will appear in the block list.
+    'cache' => DRUPAL_CACHE_PER_ROLE, //Default
+  );
+
+  // Return the block
+  return $blocks;
+} // function music_block_info()
+
+/**
+ * Implements hook_block_view().
+ *
+ * Prepares the contents of the block.
+ */
+function music_block_view($delta = '') {
+
+  // Initialize the block
+  $block = '';
+
+  // switch for the block to display
+  switch ($delta) {
+    case 'music_navigation_block':
+      // Define the block subject
+      $block['subject'] = t('music navigation block');
+
+      // Check for user access
+      if (user_access('access content')) {
+        // Populate the block content
+        include_once('includes/music.navigation.inc');
+        $block['content'] = music_navigation();
+      }
+      break;
+  }
+
+  // Return the block
+  return $block;
+} // function music_block_view()

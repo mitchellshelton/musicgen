@@ -1,0 +1,249 @@
+<?php
+
+// Load the music theory class
+include_once("musictheory.class");
+
+// Load the dice class
+include_once("dice.class");
+
+class Progression {
+
+  // Create the progression
+  public function __construct($key = '0', $length = '0') {
+    $this->progression = $this->music_get_song_progression($key, $length);
+  }
+
+  public function music_get_song_progression($key = '0', $length = '0') {
+
+    // Random generate a key if one does not exist
+    if ($key == '0') {
+      // Get a random key
+      $key = $this->music_random_key();
+    }
+
+    // Random generate a length if one does not exist
+    if ($length == '0') {
+      // Get the length of the progression sequence
+      $progression_length = array(4, 8, 12);
+
+      // Create a new dice object
+      $dice = new Dice();
+
+      // Get a random length
+      $length = $progression_length[$dice->roll(1, 3) - 1];
+    }
+
+    // Get the progression sequence
+    $progression_steps = $this->music_progression_steps($length);
+
+    // Get the progression
+    $progression = $this->music_working_progression($length, $key, $progression_steps);
+
+    // Get the song chords
+    $progression_chords = $this->music_progression_chords($progression_steps, $key, $progression);
+
+    // Initialize our return array
+    $song_progression = array();
+
+    // Get our working progression notes
+    $song_progression['progression'] = $progression;
+    $song_progression['properties'] = array('key' => $key, 'length' => $length, 'chords' => $progression_chords);
+
+    // Return the song progression
+    return $song_progression;
+  }
+
+  public function music_random_key() {
+
+    // Create a new music theory object
+    $theory = new Musictheory();
+
+    // Load the qualities and scales into an array
+    $song_scale = $theory->song_scale;
+
+    // Create a new dice object
+    $dice = new Dice();
+
+    // Roll for quality
+    $quality_roll = $dice->roll(1, 2) - 1;
+
+    // Get the quality
+    $quality = $song_scale[$quality_roll][0];
+
+    // Get the number of notes from our selected quality
+    $num_notes = count($song_scale[$quality_roll][1]);
+
+    // Roll for notes
+    $note_roll = $dice->roll(1, $num_notes) - 1;
+
+    // Get the note
+    $note = $song_scale[$quality_roll][1][$note_roll];
+
+    // Initialize our return array
+    $key = array();
+
+    // Add the note and quality to our array
+    $key['note'] = $note;
+    $key['quality'] = $quality;
+
+    // Return the random key
+    return $key;
+  }
+
+  public function music_progression_steps($length = 4, $is_alternative = FALSE) {
+
+    // Create a new dice object
+    $dice = new Dice();
+
+    /*
+     * These are tonal steps for generating a "pleasing" pattern.
+     * The 1 represents the first note in the pattern with the numbers
+     * in the corresponding array representing the position of the next note.
+     * This can be used both for chord progressions and melody generation.
+     */
+    $steps = array(
+      1 => array(1, 2, 3, 4, 5, 6, 7),
+      2 => array(4, 5, 7),
+      3 => array(2, 4, 6),
+      4 => array(1, 3, 5, 7),
+      5 => array(1),
+      6 => array(2, 4, 5, 1),
+      7 => array(1, 3)
+    );
+
+    // An alternative chord following pattern
+    $steps_alternative = array(
+      1 => array(6, 2, 4, 5),
+      2 => array(1, 4, 3),
+      3 => array(5, 4, 2),
+      4 => array(2, 5, 1, 3),
+      5 => array(3, 6, 4, 1),
+      6 => array(1, 7, 5),
+      7 => array(6)
+    );
+
+    // Initialize the progression array
+    $progression = array();
+    // Generate the first note
+    $first_note = $dice->roll(1, 7);
+
+    // Record the first step as the first note
+    $progression[] = $first_note;
+    // Initialize and record our last step
+    $last_step = $first_note;
+
+    // Populate the progression
+    /*
+     * This section needs more work, need a "center" note that we work toward from both ends
+     */
+    for ($i = 1; $i < $length - 1; $i++) {
+      // Determine which step jumps us back to a single note
+      if ($is_alternative == TRUE) {
+        $jump_step = 7;
+        $to_step = 6;
+      }
+      else {
+        $jump_step = 5;
+        $to_step = 1;
+      }
+      // Determine if we are on a jump step, if not, record a random roll from those available
+      if ($last_step != $jump_step) {
+        $current_step = $steps[$last_step][$dice->roll(1, count($steps[$last_step])) - 1];
+      }
+      else {
+        $current_step = $to_step;
+      }
+      // Add the step to the progression array
+      $progression[] = $current_step;
+      // Store the last step for the next pass
+      $last_step = $current_step;
+    }
+    // Close the progression with the first note
+    $progression[] = $first_note;
+
+    // Return the progression
+    return $progression;
+  }
+
+  public function music_working_progression($length, $key, $progression_steps) {
+
+    // Create a new music theory object
+    $theory = new Musictheory();
+    // Get the scales
+    $scales = $theory->scales;
+
+    // Initialize our return array
+    $working_progression = array();
+    // Loop over our steps
+    for ($i = 0; $i < $length; $i++) {
+      // Get each step from the scales in the progression
+      $working_progression[] = $scales[$key['quality']][$key['note']][$progression_steps[$i] - 1];
+    }
+
+    // Return our working progression
+    return $working_progression;
+  }
+
+  public function music_progression_chords($progression_steps, $key, $progression) {
+
+    // Create a new music theory object
+    $theory = new Musictheory();
+
+    // Get the progression pattern and chord table builder
+    $chord_progression_pattern = $theory->chord_progression_pattern;
+    $chord_tables = $theory->chord_tables;
+
+    // Initialize our chord array
+    $progression_chords = array();
+
+    // Loop over the progression
+    for ($i = 0; $i < count($progression_steps); $i++) {
+
+      // Get the pattern letter (this will be upper and lower case roman numerals or an *)
+      $pattern = $chord_progression_pattern[$key['quality']][$progression_steps[$i] - 1];
+
+      // Get major chord
+      if (ctype_upper($pattern) === true) {
+        // If the pattern is upper case, we grab the Major chord for this step
+        $progression_chords[] = array(
+          // Root
+          $chord_tables['Major'][$progression[$i]][0],
+          // Major Third
+          $chord_tables['Major'][$progression[$i]][1],
+          // Perfect Fifth
+          $chord_tables['Major'][$progression[$i]][2]
+        );
+      }
+      // Get minor chord
+      else if (ctype_lower($pattern) === true) {
+        // If the pattern is lower case, we grab the Minor chord for this step
+        $progression_chords[] = array(
+          // Root
+          $chord_tables['Minor'][$progression[$i]][0],
+          // Minor Third
+          $chord_tables['Minor'][$progression[$i]][1],
+          // Perfect Fifth
+          $chord_tables['Minor'][$progression[$i]][2]
+        );
+      }
+      // Get diminished chord
+      if (strstr($pattern, '*') == '*') {
+        // If the pattern is contains an '*', we grab the Diminished chord for this step
+        $progression_chords[] = array(
+          // Root
+          $chord_tables['Diminished'][$progression[$i]][0],
+          // Third
+          $chord_tables['Diminished'][$progression[$i]][1],
+          // Fifth
+          $chord_tables['Diminished'][$progression[$i]][2]
+        );
+      }
+    }
+
+    // Return the array of chords
+    return $progression_chords;
+  }
+
+}
+
+?>

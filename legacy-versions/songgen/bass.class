@@ -1,0 +1,71 @@
+<?php
+
+class Bass {
+
+  // Create the bassline
+  public function __construct($progression = '0', $drum_pattern = '0') {
+    $this->bassline = $this->get_bass_line($progression, $drum_pattern);
+  }
+
+  public function get_bass_line($progression = '0', $drum_pattern = '0') {
+
+    // Load the rhythm class
+    include_once("rhythm.class");
+    $rhythm = new Rhythm($progression, $drum_pattern);
+    $rhythm_pattern = $rhythm->pattern;
+
+    // Initialize our return array
+    $bassline = array();
+
+    /**
+     * Some potential strategies for bassline creation via http://sydneybasslessons.com/lesson1.html
+     * For now we will just add the root note from each chord to the 1 (kick)
+     */
+    // Get the root note from the progression and apply to each 1
+    // Get the third and apply to every other 2
+    // Get the fifth and apply to every other 3
+    // Apply the root to the unused 2 and 3
+    // In the fourth measure apply a random note not in the chord but from the key to the 2 and 3
+
+    $root_note = array();
+
+    // Get the root note
+    for ($i = 0; $i < count($progression->progression['progression']); $i++) {
+      $root_note[] = $progression->progression['properties']['chords'][$i][0];
+    }
+
+    // Build the bassline from the rhythm
+    /* NOTE: This is always assuming a 4 chord progression, we will need to fix that */
+    for($i = 0; $i < 16; $i++) {
+      if ($rhythm_pattern['measure_one'][$i] == 1) {
+        $bassline['measure_one'][$i] = $root_note[0];
+      }
+      else {
+        $bassline['measure_one'][$i] = 0;
+      }
+      if ($rhythm_pattern['measure_two'][$i] == 1) {
+        $bassline['measure_two'][$i] = $root_note[1];
+      }
+      else {
+        $bassline['measure_two'][$i] = 0;
+      }
+      if ($rhythm_pattern['measure_three'][$i] == 1) {
+        $bassline['measure_three'][$i] = $root_note[2];
+      }
+      else {
+        $bassline['measure_three'][$i] = 0;
+      }
+      if ($rhythm_pattern['measure_four'][$i] == 1) {
+        $bassline['measure_four'][$i] = $root_note[3];
+      }
+      else {
+        $bassline['measure_four'][$i] = 0;
+      }
+    }
+
+    return $bassline;
+  }
+
+}
+
+?>

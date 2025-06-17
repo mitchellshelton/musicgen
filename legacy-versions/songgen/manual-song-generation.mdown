@@ -1,0 +1,775 @@
+---
+# Manual Song Creation System
+---
+> Create a notation and selection system to manually create random songs.
+
+## Generator goals
+- Full song generation
+- Export as multitrack Ableton XML file
+
+## System Rethink
+
+- Based on 4 measure structure
+  - 
+  - All parts
+    - repeated pattern on first 3 measures
+    - 4th measure variation
+  - Drum Patterns
+    - Type 1: 4/4
+      - All parts repeat, crash and hihat/snare flourish on 4th
+    - Type 2: Breakbeat
+      - All parts repeat with much variation, double kicks and snares on 4th
+    - Both Types:
+      - Drum rolls/breakdown for bridge should mirror 4th measure without kick
+  - Bass Line
+    - long root/third should follow kick drum
+    - extra third on 2nd and 4th measure with snare
+    - fifth in 4th measure
+  - Backing
+    - Full long chord on each measure, limit 4 chord patterns to match 4 measure structure
+      - Occasional chord repeats on a single measure
+  - Melody
+    - Change to match 4 measure structure
+
+### Melody Generation
+
+  - The Parts
+  - Call
+    - 1 bar
+    - steps 1-16 (1-16: Measure 3)
+  - Response
+    - 1 bar
+    - steps 17-32 (1-16: Measure 3)
+  - Call Repetition
+    - 1 bar
+    - steps 33-48 (1-16: Measure 3)
+  - Response Variation
+    - 1 bar
+    - steps 49-64 (1-16: Measure 4)
+
+  - Melody 1
+    - Call
+    - Call Repetition
+  - Melody 2
+    - Call
+    - Response
+    - Call Repetition
+  - Melody 3
+    - Call
+    - Call Repetition
+    - Response Variation
+
+  - Other Notes
+    - All 3 sounds play call and call repetition
+    - Only Melody 2 and Melody 3 play responses
+    - 8-12 Notes for each part
+    - 4-8 Silent notes across each bar
+    - Melody silence positioning should be used in percussion
+
+  > The Process
+
+    1. Randomly generate call duration (8-12 notes)
+    2. Randomly generate response duration (8-12 notes)
+    3. Call - first note is root
+    4. Response Variation - last note is root
+    5. Generate Call based on low to high pattern
+      - root-mid-mid-high: 1, 4-5, 4-5, 6-7 (steps from "pleasing" pattern)
+    6. Generate Response based on high to low pattern
+      - high-low-mid-mid (no root): 6-7, 2-3, 4-5, 4-5 (steps from "pleasing" pattern)
+    7. Generate Response Variation
+      - high-low-mid-root: 6-7, 2-3, 4-5, 1 (steps from "pleasing" pattern)
+    8. Using Call and Response durations get silence duration
+    9. Randomly generate rhythm based on silences
+
+### Song Structure
+---
+  - Intro  --  0:00 - 0:12 - 6 Measures  -- 000 - 006
+  - Verse  --  0:12 - 1:16 - 32 Measures -- 006 - 038
+  - Verse  --  1:16 - 2:20 - 32 Measures -- 038 - 070
+  - Chorus  --  2:20 - 2:52 - 16 Measures -- 070 - 086
+  - Verse  --  2:52 - 3:56 - 32 Measures -- 086 - 118
+  - Bridge  --  3:56 - 4:12 - 8 Measures  -- 118 - 126
+  - Verse  --  4:12 - 5:16 - 32 Measures -- 126 - 158
+  - Chorus  --  5:16 - 5:48 - 16 Measures -- 158 - 174
+  - Outro  --  5:48 - 6:00 - 6 Measures  -- 174 - 180
+
+### Other Structures
+---
+
+- Structure A
+  - Intro
+  - Verse 1
+  - Chorus
+  - Verse 2
+  - Chorus
+  - Intro
+  - Solo
+  - Chorus
+  - Chorus
+  - Finale
+
+- Structure B
+  - Intro
+  - Verse 1
+  - Bridge
+  - Verse 2
+  - Chorus
+  - Verse 3
+  - Chorus
+  - Solo
+  - Chorus
+  - Chorus
+  - Finale
+
+- Structure C
+ - Intro
+ - Chorus
+ - Verse 1
+ - Chorus
+ - Verse 2
+ - Chorus
+ - Bridge
+ - Solo
+ - Chorus
+ - Chorus
+ - Chorus
+ - Fade
+
+- Structure D
+  - Intro
+  - Chorus
+  - Verse 1
+  - Bridge
+  - Chorus
+  - Verse 2
+  - Bridge
+  - Chorus
+  - Solo
+  - Bridge
+  - Chorus
+  - Chorus
+  - Finale
+
+#### Song Parts
+---
+  - Verse 1 - Kick, Percussion, Bass, Backing, and Melody 1
+  - Verse 2 - Kick, Percussion, Bass, Backing and Melody 2
+  - Verse 3 - Kick, Percussion, Bass, Backing and Melody 3
+  - Verse 4 - Kick, Percussion, Bass, Backing, Melody 1, and Melody 3
+  - Bridge - Bass and Percussion
+  - Solo - Melody 1, Melody 2, Melody 3
+  - Chorus - Kick, Percussion, Bass, Backing, Melody 1, Melody 2, and Melody 3
+
+---
+
+ - Steps
+  - Select a quality
+  - Select a scale
+  - Select a progression length
+  - Generate a progression pattern
+  - Using generated progression
+    - Generate Bass Line
+    - Generate Backing Track
+    - Generate Melody One
+    - Generate Melody Two
+    - Generate Melody Three
+  - Generate Core Drum Patterns
+  - Assemble Intro
+  - Assemble Verse One
+  - Assemble Verse Two
+  - Assemble Verse Three
+  - Assemble Verse Four
+  - Assemble Chorus
+  - Assemble Bridge
+  - Assemble Outro
+  - Select a song length
+  - Generate Song
+
+---
+## Song Part Notes
+---
+
+    24 Tracks
+    ---
+    3 Minutes Average
+
+    16 Sounds
+    ---
+    01. Kick
+    02. Kick 2
+    03. Snare
+    04. Snare 2
+    05. Open HH
+    06. Closed HH
+    07. Bass
+    08. Melody 1a
+    09. Melody 1b
+    10. Melody 1c
+    11. Melody 2a
+    12. Melody 2b
+    13. Melody 3a
+    14. Melody 3b
+    15. Melody 3c
+    16. Backing
+
+
+    16 Groups
+    ---
+    01. Backing
+    02. Percussion
+    03. Kick
+    04. Melody 1
+    05. Melody 2
+    06. Melody 3
+    07. Bass
+    08. Break
+    09. Verse 1
+    10. Verse 2
+    11. Verse 3
+    12. Verse 4
+    13. Chorus 1
+    14. Chorus 2
+    15. Chorus 3
+    16. Chorus 4
+
+    Intro  --  0:00 - 0:12 - 6 Measures  -- 000 - 006
+    Verse  --  0:12 - 1:16 - 32 Measures -- 006 - 038
+    Verse  --  1:16 - 2:20 - 32 Measures -- 038 - 070
+    Chorus  --  2:20 - 2:52 - 16 Measures -- 070 - 086
+    Verse  --  2:52 - 3:56 - 32 Measures -- 086 - 118
+    Bridge  --  3:56 - 4:12 - 8 Measures  -- 118 - 126
+    Verse  --  4:12 - 5:16 - 32 Measures -- 126 - 158
+    Chorus  --  5:16 - 5:48 - 16 Measures -- 158 - 174
+    Outro  --  5:48 - 6:00 - 6 Measures  -- 174 - 180
+
+    Song Parts
+    ---
+    Verse 1 - Kick, Percussion, Bass, Backing, and Melody 1
+    Verse 2 - Kick, Percussion, Bass, Backing and Melody 2
+    Verse 3 - Kick, Percussion, Bass, Backing and Melody 3
+    Verse 4 - Kick, Percussion, Bass, Backing, Melody 1, and Melody 3
+    Bridge - Bass and Percussion
+    Chorus - Kick, Percussion, Bass, Backing, Melody 1, Melody 2, and Melody 3
+
+---
+## Code
+---
+
+    /**
+     * Music Theory Class
+     */
+
+    // Define the class
+    function Musictheory() {
+
+      // Initialize the public arrays
+      var song_scale = [];
+      var scales = [];
+      var chord_progression_pattern = [];
+      var theoretical_notes = [];
+
+      // Define the major and minor scales
+      song_scale = {
+        'Major': [
+          "C",
+          "G",
+          "D",
+          "A",
+          "E",
+          "B",
+          "Gb",
+          "F#",
+          "Db",
+          "Ab",
+          "Eb",
+          "Bb",
+          "F"
+        ],
+        'Minor': [
+          "A",
+          "E",
+          "B",
+          "F#",
+          "C#",
+          "G#",
+          "Eb",
+          "D#",
+          "Bb",
+          "F",
+          "C",
+          "G",
+          "D"
+        ]
+      };
+
+      // Diatonic scales
+      scales = {
+        // # = sharp, b = flat, ## = double sharp, bb = double flat
+        // Major Scales
+        "Major": {
+          "Cb": ["Cb", "Db", "Eb", "Fb", "Gb", "Ab", "Bb"],
+          "C": ["C", "D", "E", "F", "G", "A", "B"],
+          "C#": ["C#", "D#", "E#", "F#", "G#", "A#", "B#"],
+          "Db": ["Db", "Eb", "F", "Gb", "Ab", "Bb", "C"],
+          "D": ["D", "E", "F#", "G", "A", "B", "C#"],
+          "D#": ["D#", "E#", "F##", "G#", "A#", "B#", "C##"],
+          "Eb": ["Eb", "F", "G", "Ab", "Bb", "C", "D"],
+          "E": ["E", "F#", "G#", "A", "B", "C#", "D#"],
+          "E#": ["E#", "F##", "G##", "A#", "B#", "C##", "D##"],
+          "Fb": ["Fb", "Gb", "Ab", "Bbb", "Cb", "Db", "Eb"],
+          "F": ["F", "G", "A", "Bb", "C", "D", "E"],
+          "F#": ["F#", "G#", "A#", "B", "C#", "D#", "E#"],
+          "Gb": ["Gb", "Ab", "Bb", "Cb", "Db", "Eb", "F"],
+          "G": ["G", "A", "B", "C", "D", "E", "F#"],
+          "G#": ["G#", "A#", "B#", "C#", "D#", "E#", "F##"],
+          "Ab": ["Ab", "Bb", "C", "Db", "Eb", "F", "G"],
+          "A": ["A", "B", "C#", "D", "E", "F#", "G#"],
+          "A#": ["A#", "B#", "C##", "D#", "E#", "F##", "G##"],
+          "Bb": ["Bb", "C", "D", "Eb", "F", "G", "A"],
+          "B": ["B", "C#", "D#", "E", "F#", "G#", "A#"],
+          "B#": ["B#", "C##", "D##", "E#", "F##", "G##", "A##"]
+        },
+        // Minor Scales
+        "Minor": {
+          "Cb": ["Cb", "Db", "Ebb", "Fb", "Gb", "Abb", "Bbb"],
+          "C": ["C", "D", "Eb", "F", "G", "Ab", "Bb"],
+          "C#": ["C#", "D#", "E", "F#", "G#", "A", "B"],
+          "Db": ["Db", "Eb", "Fb", "Gb", "Ab", "Bbb", "Cb"],
+          "D": ["D", "E", "F", "G", "A", "Bb", "C"],
+          "D#": ["D#", "E#", "F#", "G#", "A#", "B", "C#"],
+          "Eb": ["Eb", "F", "Gb", "Ab", "Bb", "Cb", "Db"],
+          "E": ["E", "F#", "G", "A", "B", "C", "D"],
+          "E#": ["E#", "F##", "G#", "A#", "B#", "C#", "D#"],
+          "Fb": ["Fb", "Gb", "Abb", "Bbb", "Cb", "Dbb", "Ebb"],
+          "F": ["F", "G", "Ab", "Bb", "C", "Db", "Eb"],
+          "F#": ["F#", "G#", "A", "B", "C#", "D", "E"],
+          "Gb": ["Gb", "Ab", "Bbb", "Cb", "Db", "Ebb", "Fb"],
+          "G": ["G", "A", "Bb", "C", "D", "Eb", "F"],
+          "G#": ["G#", "A#", "B", "C#", "D#", "E", "F#"],
+          "Ab": ["Ab", "Bb", "Cb", "Db", "Eb", "Fb", "Gb"],
+          "A": ["A", "B", "C", "D", "E", "F", "G"],
+          "A#": ["A#", "B#", "C#", "D#", "E#", "F#", "G#"],
+          "Bb": ["Bb", "C", "Db", "Eb", "F", "Gb", "Ab"],
+          "B": ["B", "C#", "D", "E", "F#", "G", "A"],
+          "B#": ["B#", "C##", "D#", "E#", "F##", "G#", "A#"]
+        }
+      };
+
+      chord_progression_pattern = {
+        // lower case i = minor, upper case I = major, * = diminished
+        "Major": ["I", "ii", "iii", "IV", "V", "vi", "vii*"],
+        "Minor": ["i", "ii*", "III", "iv", "v", "VI", "VII"]
+      };
+
+      theoretical_notes = {
+        "Double Flats": {
+          "C": "Bb",
+          "D": "C",
+          "E": "D",
+          "F": "Eb",
+          "G": "F",
+          "A": "G",
+          "B": "A"
+        },
+        "Double Sharps": {
+          "C": "D",
+          "D": "E",
+          "E": "F#",
+          "F": "G",
+          "G": "A",
+          "A": "B",
+          "B": "C#"
+        },
+        "Enharmonics": {
+          "E#": "F",
+          "B#": "C",
+          "Fb": "E",
+          "Cb": "B"
+        }
+      };
+
+      // Assign created variables to the appropriate scope
+      this.song_scale = song_scale;
+      this.scales = scales;
+      this.chord_progression_pattern = chord_progression_pattern;
+      this.theoretical_notes = theoretical_notes;
+
+    } // function Musictheory()
+
+    // Create the table of chords based on provided array data
+    Musictheory.prototype.chord_table_builder = function() {
+      // Initialize the return variable
+      var tables = [];
+
+      tables = {
+        // Chord -> Root, Major third, Perfect fifth
+        "Major": {
+          "C": [this.scales["Major"]["C"][0],
+                this.scales["Major"]["C"][2],
+                this.scales["Major"]["C"][4]
+          ],
+          "Cb": [this.scales["Major"]["Cb"][0],
+                 this.scales["Major"]["Cb"][2],
+                 this.scales["Major"]["Cb"][4]
+          ],
+          "C":  [this.scales["Major"]["C"][0],
+                 this.scales["Major"]["C"][2],
+                 this.scales["Major"]["C"][4]
+          ],
+          "C#": [this.scales["Major"]["C#"][0],
+                 this.scales["Major"]["C#"][2],
+                 this.scales["Major"]["C#"][4]
+          ],
+          "Db": [this.scales["Major"]["Db"][0],
+                this.scales["Major"]["Db"][2],
+                this.scales["Major"]["Db"][4]
+          ],
+          "D": [this.scales["Major"]["D"][0],
+                this.scales["Major"]["D"][2],
+                this.scales["Major"]["D"][4]
+          ],
+          "D#": [this.scales["Major"]["D#"][0],
+                this.scales["Major"]["D#"][2],
+                this.scales["Major"]["D#"][4]
+          ],
+          "Eb": [this.scales["Major"]["Eb"][0],
+                this.scales["Major"]["Eb"][2],
+                this.scales["Major"]["Eb"][4]
+          ],
+          "E": [this.scales["Major"]["E"][0],
+                this.scales["Major"]["E"][2],
+                this.scales["Major"]["E"][4]
+          ],
+          "E#": [this.scales["Major"]["E#"][0],
+                this.scales["Major"]["E#"][2],
+                this.scales["Major"]["E#"][4]
+          ],
+          "Fb": [this.scales["Major"]["Fb"][0],
+                this.scales["Major"]["Fb"][2],
+                this.scales["Major"]["Fb"][4]
+          ],
+          "F": [this.scales["Major"]["F"][0],
+                this.scales["Major"]["F"][2],
+                this.scales["Major"]["F"][4]
+          ],
+          "F#": [this.scales["Major"]["F#"][0],
+                this.scales["Major"]["F#"][2],
+                this.scales["Major"]["F#"][4]
+          ],
+          "Gb": [this.scales["Major"]["Gb"][0],
+                this.scales["Major"]["Gb"][2],
+                this.scales["Major"]["Gb"][4]
+          ],
+          "G": [this.scales["Major"]["G"][0],
+                this.scales["Major"]["G"][2],
+                this.scales["Major"]["G"][4]
+          ],
+          "G#": [this.scales["Major"]["G#"][0],
+                this.scales["Major"]["G#"][2],
+                this.scales["Major"]["G#"][4]
+          ],
+          "Ab": [this.scales["Major"]["Ab"][0],
+                this.scales["Major"]["Ab"][2],
+                this.scales["Major"]["Ab"][4]
+          ],
+          "A": [this.scales["Major"]["A"][0],
+                this.scales["Major"]["A"][2],
+                this.scales["Major"]["A"][4]
+          ],
+          "A#": [this.scales["Major"]["A#"][0],
+                this.scales["Major"]["A#"][2],
+                this.scales["Major"]["A#"][4]
+          ],
+          "Bb": [this.scales["Major"]["Bb"][0],
+                this.scales["Major"]["Bb"][2],
+                this.scales["Major"]["Bb"][4]
+          ],
+          "B": [this.scales["Major"]["B"][0],
+                this.scales["Major"]["B"][2],
+                this.scales["Major"]["B"][4]
+          ],
+          "B#": [this.scales["Major"]["B#"][0],
+                this.scales["Major"]["B#"][2],
+                this.scales["Major"]["B#"][4]
+          ]
+        },
+        // Chord -> Root, Minor third, Perfect fifth
+        "Minor": {
+          "Cb": [this.scales["Minor"]["Cb"][0],
+                 this.scales["Minor"]["Cb"][2],
+                 this.scales["Minor"]["Cb"][4]
+          ],
+          "C": [this.scales["Minor"]["C"][0],
+                this.scales["Minor"]["C"][2],
+                this.scales["Minor"]["C"][4]
+          ],
+          "C#": [this.scales["Minor"]["C#"][0],
+                 this.scales["Minor"]["C#"][2],
+                 this.scales["Minor"]["C#"][4]
+          ],
+          "Db": [this.scales["Minor"]["Db"][0],
+                 this.scales["Minor"]["Db"][2],
+                 this.scales["Minor"]["Db"][4]
+          ],
+          "D" : [this.scales["Minor"]["D"][0],
+                 this.scales["Minor"]["D"][2],
+                 this.scales["Minor"]["D"][4]
+          ],
+          "D#": [this.scales["Minor"]["D#"][0],
+                 this.scales["Minor"]["D#"][2],
+                 this.scales["Minor"]["D#"][4]
+          ],
+          "Eb": [this.scales["Minor"]["Eb"][0],
+                 this.scales["Minor"]["Eb"][2],
+                 this.scales["Minor"]["Eb"][4]
+          ],
+          "E": [this.scales["Minor"]["E"][0],
+                this.scales["Minor"]["E"][2],
+                this.scales["Minor"]["E"][4]
+          ],
+          "E#": [this.scales["Minor"]["E#"][0],
+                 this.scales["Minor"]["E#"][2],
+                 this.scales["Minor"]["E#"][4]
+          ],
+          "Fb": [this.scales["Minor"]["Fb"][0],
+                 this.scales["Minor"]["Fb"][2],
+                 this.scales["Minor"]["Fb"][4]
+          ],
+          "F": [this.scales["Minor"]["F"][0],
+                this.scales["Minor"]["F"][2],
+                this.scales["Minor"]["F"][4]
+          ],
+          "F#": [this.scales["Minor"]["F#"][0],
+                 this.scales["Minor"]["F#"][2],
+                 this.scales["Minor"]["F#"][4]
+          ],
+          "Gb": [this.scales["Minor"]["Gb"][0],
+                 this.scales["Minor"]["Gb"][2],
+                 this.scales["Minor"]["Gb"][4]
+          ],
+          "G": [this.scales["Minor"]["G"][0],
+                this.scales["Minor"]["G"][2],
+                this.scales["Minor"]["G"][4]
+          ],
+          "G#": [this.scales["Minor"]["G#"][0],
+                 this.scales["Minor"]["G#"][2],
+                 this.scales["Minor"]["G#"][4]
+          ],
+          "Ab": [this.scales["Minor"]["Ab"][0],
+                 this.scales["Minor"]["Ab"][2],
+                 this.scales["Minor"]["Ab"][4]
+          ],
+          "A": [this.scales["Minor"]["A"][0],
+                this.scales["Minor"]["A"][2],
+                this.scales["Minor"]["A"][4]
+          ],
+          "A#": [this.scales["Minor"]["A#"][0],
+                 this.scales["Minor"]["A#"][2],
+                 this.scales["Minor"]["A#"][4]
+          ],
+          "Bb": [this.scales["Minor"]["Bb"][0],
+                 this.scales["Minor"]["Bb"][2],
+                 this.scales["Minor"]["Bb"][4]
+          ],
+          "B": [this.scales["Minor"]["B"][0],
+                this.scales["Minor"]["B"][2],
+                this.scales["Minor"]["B"][4]
+          ],
+          "B#": [this.scales["Minor"]["B#"][0],
+                 this.scales["Minor"]["B#"][2],
+                 this.scales["Minor"]["B#"][4]
+          ]
+        },
+        "Diminished": {
+          // # = sharp, b = flat, ## = double sharp, bb = double flat
+          "C": ["Cb", "Ebb", "Gbb"],
+          "C": ["C", "Eb", "Gb"],
+          "C#": ["C#", "E", "G"],
+          "Db": ["Db", "Fb", "Abb"],
+          "D": ["D", "F", "Ab"],
+          "D#": ["D#", "F#", "A"],
+          "Eb": ["Eb", "Gb", "Bbb"],
+          "E": ["E", "G", "Bb"],
+          "E#": ["E#", "G#", "B"],
+          "Fb": ["Fb", "Abb", "Cbb"],
+          "F": ["F", "Ab", "Cb"],
+          "F#": ["F#", "A", "C"],
+          "Gb": ["Gb", "Bbb", "Dbb"],
+          "G": ["G", "Bb", "Db"],
+          "G#": ["G#", "B", "D"],
+          "Ab": ["Ab", "Cb", "Ebb"],
+          "A": ["A", "C", "Eb"],
+          "A#": ["A#", "C#", "E"],
+          "Bb": ["Bb", "Db", "Fb"],
+          "B": ["B", "D", "F"],
+          "B#": ["B#", "D#", "F#"]
+        }
+      };
+
+      // Assign appropriate scope to the return variable
+      this.tables = tables;
+
+      // Return the array of tables
+      return this.tables;
+    }; // Musictheory.prototype.chord_table_builder = function()
+```
+
+---
+
+## Process
+
+> Notes to build out the process
+
+---
+
+- Machinedrum
+  - Default Drum Kit Layout
+- Monomachine
+  - Track 1: Backing
+  - Track 2: Bass
+  - Track 3: Melody 1
+  - Track 4: Melody 2
+  - Track 5: Melody 3
+  - Track 6: Machinedrum Thru
+
+- Timing Breakdown
+  - 16 Steps/Measure
+  - 4 Measures/Pattern
+  - 64 Total Steps/Pattern
+  - 120 BPM
+  - 4 Beats/Measure
+  - 1 Measure/2 Seconds
+  - 3 Minutes = 180 Seconds = 90 Measures
+
+- Instrument Parts
+  - Backing
+  - Bass
+  - Melody 1
+  - Melody 2
+  - Melody 3
+  - Kick
+  - Percussion
+
+- Song Structure Parts
+  - Intro: Kick and Backing
+  - Verse 1: Kick, Percussion, Bass, Backing, and Melody 1
+  - Verse 2: Kick, Percussion, Bass, Backing, and Melody 2
+  - Verse 3: Kick, Percussion, Bass, Backing, and Melody 3
+  - Verse 4: Kick, Percussion, Bass, Backing, Melody 1, and Melody 3
+  - Chorus: Kick, Percussion, Bass, Backing, Melody 1, Melody 2, and Melody 3
+  - Bridge: Bass and Percussion
+  - Outro: Kick and Backing
+
+---
+
+> Section One - The Progression
+  - First we need to create the progression. A few parameters are needed to generate the progression. This returns an array of chord triads for the generated progression.
+
+  1. Select Note Value
+  2. Select Note Quality
+  3. Select Progression Duration
+
+*Much of this section is already complete*
+
+> Section Two - Song Parts
+  - Next we take the progression and break it down into Instrument Parts
+
+  1. Kick and Percussion
+    - Multiple basic Kick, Snare, and HiHat combinations will be offered. Since all notes and accents are determined by the placement of the kick and snare this must be selected first. A alternative melody oriented percussion track will also be available.
+      - Only two drum patterns
+        - 4/4
+        - Breakbeat
+  2. Backing
+    - Full Chorded Notes would usually be called for here. Due to the use of the Monomachine this isn't possible without using 3 channels. An optional machine is provided that simulates a chord. This limitation on sound is not always acceptable for the desired results. An alternative option will be to use the perfect fifth note from each triad.
+  3. Bass
+    - The bass uses a repeated root note from the triad that follows the kick drum. An alternative variation allowing for a alternative root and third will also be available.
+  4. Melody 1, 2, and 3
+    - Alternative methods of melody generation need to be created. Melodies will be accented based on Kick and Snare placement. Likely methods of generation involve spreading arpeggios across all three melodies so that each step is filled with a note from an alternating melody track.
+
+*A bulk of the project work takes place here*
+
+> Section Three - Output
+  - Output of the generator is done in the form of arrays displayed in tables. Notes then need to be manually entered into the Machinedrum and Monomachine. An automated export feature is not planned at this time.
+
+*This is simple display work*
+
+---
+
+### Melody Generation
+
+  - The Parts
+  - Call
+    - 1 bar
+    - steps 1-16 (1-16: Measure 3)
+  - Response
+    - 1 bar
+    - steps 17-32 (1-16: Measure 3)
+  - Call Repetition
+    - 1 bar
+    - steps 33-48 (1-16: Measure 3)
+  - Response Variation
+    - 1 bar
+    - steps 49-64 (1-16: Measure 4)
+
+  - Melody 1
+    - Call
+    - Call Repetition
+  - Melody 2
+    - Call
+    - Response
+    - Call Repetition
+  - Melody 3
+    - Call
+    - Call Repetition
+    - Response Variation
+
+  - Other Notes
+    - All 3 sounds play call and call repetition
+    - Only Melody 2 and Melody 3 play responses
+    - 8-12 Notes for each part
+    - 4-8 Silent notes across each bar
+    - Melody silence positioning should be used in percussion
+
+  > The Process
+
+    1. Randomly generate call duration (8-12 notes)
+    2. Randomly generate response duration (8-12 notes)
+    3. Call - first note is root
+    4. Response Variation - last note is root
+    5. Generate Call based on low to high pattern
+      - root-mid-mid-high: 1, 4-5, 4-5, 6-7 (steps from "pleasing" pattern)
+    6. Generate Response based on high to low pattern
+      - high-low-mid-mid (no root): 6-7, 2-3, 4-5, 4-5 (steps from "pleasing" pattern)
+    7. Generate Response Variation
+      - high-low-mid-root: 6-7, 2-3, 4-5, 1 (steps from "pleasing" pattern)
+    8. Using Call and Response durations get silence duration
+    9. Randomly generate rhythm based on silences
+
+> Much of the above outlined method is based on the following section for generating a "pleasing" pattern and the related progression pattern:
+
+    ```
+
+    // These are tonal steps for generating a "pleasing" pattern.
+    // The 1 represents the first note in the pattern with the numbers
+    // in the corresponding array representing the position of the next note.
+    // This can be used both for chord progressions and melody generation.
+    var steps = {
+      1: [1, 2, 3, 4, 5, 6, 7],
+      2: [4, 5, 7],
+      3: [2, 4, 6],
+      4: [1, 3, 5, 7],
+      5: [1],
+      6: [2, 4, 5, 1],
+      7: [1, 3]
+    };
+
+    // The numbers above correspond to the following chord progression patterns
+    chord_progression_pattern = {
+      // lower case i = minor, upper case I = major, * = diminished
+      "Major": ["I", "ii", "iii", "IV", "V", "vi", "vii*"],
+      "Minor": ["i", "ii*", "III", "iv", "v", "VI", "VII"]
+    };
+
+    ```
+
+---

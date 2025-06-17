@@ -1,0 +1,123 @@
+﻿212 Bars * 4 Beats / 120 BPM = 7 Minutes
+
+-------------------------------
+Complex Musical Elements
+-------------------------------
+Bass Line
+Motif 1
+Motif 2
+Motif 3
+Chorded Strings
+
+-------------------------------
+Basic Elements of a Dance Song
+-------------------------------
+Kick
+Snare
+Hats
+Claps
+Bass
+Motif 1
+Snare Roll 1 (4 bars)
+Crash 1
+Motif 2
+Crash 2
+Chorded Strings
+Snare Roll 2 (4 bars)
+Crash 3
+Snare Roll 3 (long - 8 bars)
+Motif 3
+Additional Snares
+Sweeping effects
+Crash 4
+
+-------------------------------
+Dance Song Progression
+-------------------------------
+The intro
+
+Bars 1-16
+
+4/4 Drum Loop
+
+Bars 16-32
+
+Complete Drum Loop (Snare, hats, claps) Maybe another instrument
+
+
+First Body
+
+Bars 32-48
+
+Main Groove - bass and drums - unaltered to allow dancers to become comfortable with general groove
+
+Bars 48-64
+
+Introduce motif (filter opening) - build up (higher frequencies) - (1st Motif)
+
+The Drop
+
+    Bars 64-72
+
+        Motif (filter closed) and Bass only - (1st Motif)
+        At bar 68 percussion returns (hats followed by snares) followed by kick
+        Open filter on Motif - (1st Motif)
+    snare roll to introduce second body
+
+The Second Body
+
+    Bars 72-88
+
+        Crash Cymbal starts second body
+        New Motif Introduced - (2nd Motif)
+    Flowing filters of both motifs creating movement - (1st and 2nd Motif)
+
+    Bars 88-104
+
+        Crash, snare roll, skip, or effect indicates next 16 bars
+        Chorded Strings Introduced (low pass filters)
+        Song building up, all filters open
+        Snare roll to introduce drop (final four bars)
+
+The Drop
+
+    Bars 104-108
+
+        Sudden crash
+        Strings and 2nd Motif only- (2nd Motif)
+        2nd bar close filter
+        Open filter to build
+
+The Reprise
+
+    Bars 108-116
+
+        Snare Roll (slowly gaining in volume) (full 8 bars)
+        Motifs and Chords filters opening throughout- (All Motif)
+        All instruments, building to peak
+
+The Main Body
+
+    Bars 116-148
+
+        New Motif - (3rd Motif)
+        Filter closes on one motif while opening on another - (All Motif)
+
+    Bars 148-180
+
+        Additional Snares (add skip to rhythm)
+        Sweeping effects (pan across mix)
+
+The Outro
+
+    Bars 180-196
+
+        Cymbal Crash
+        Drop one motif - (2nd and 3rd Motif, drop 1st Motif)
+        Filters begin to close on two remaining motifs and chords
+        Drop all but drums, percussion, and bass
+
+    Bars 196-212
+
+        Bass dropped
+        Drums and Percussion for final 16 bars

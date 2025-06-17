@@ -1,0 +1,98 @@
+<?php
+
+// Load the dice class
+include_once("dice.class");
+
+class Drums {
+
+  public $patterns = array();
+
+  public function __construct() {
+    $this->patterns = $this->drum_pattern_builder();
+  }
+
+  private function drum_pattern_builder() {
+    $drum_pattern = array();
+
+    /**
+     * Typical 4/4 beat
+     */
+    // Kick                                                 | 01 02 03 04 | 05 06 07 08 | 09 10 11 12 | 13 14 15 16 |
+    $drum_pattern[0]['kick']['measure_one'] =         array(  1, 0, 0, 0,   1, 0, 0, 0,   1, 0, 0, 0,   1, 0, 0, 0);
+    // Kick
+    $drum_pattern[0]['kick']['measure_two'] = $drum_pattern[0]['kick']['measure_one'];
+    $drum_pattern[0]['kick']['measure_three'] = $drum_pattern[0]['kick']['measure_one'];
+                                                         // | 01 02 03 04 | 05 06 07 08 | 09 10 11 12 | 13 14 15 16 |
+    $drum_pattern[0]['kick']['measure_four'] =        array(  1, 0, 0, 0,   1, 0, 0, 0,   1, 0, 0, 0,   1, 0, 0, 0);
+
+    // Snare                                                | 01 02 03 04 | 05 06 07 08 | 09 10 11 12 | 13 14 15 16 |
+    $drum_pattern[0]['snare']['measure_one'] =        array(  0, 0, 0, 0,   1, 0, 0, 0,   0, 0, 0, 0,   1, 0, 0, 0);
+                                                         // | 01 02 03 04 | 05 06 07 08 | 09 10 11 12 | 13 14 15 16 |
+    $drum_pattern[0]['snare']['measure_two'] =        array(  0, 0, 0, 0,   1, 0, 0, 0,   0, 0, 0, 0,   1, 0, 0, 0);
+    $drum_pattern[0]['snare']['measure_three'] = $drum_pattern[0]['snare']['measure_one'];
+    $drum_pattern[0]['snare']['measure_four'] = $drum_pattern[0]['snare']['measure_one'];
+
+    // Closed Hi-Hat                                        | 01 02 03 04 | 05 06 07 08 | 09 10 11 12 | 13 14 15 16 |
+    $drum_pattern[0]['closed_hihat']['measure_one'] = array(  0, 1, 0, 1,   0, 1, 0, 1,   0, 1, 0, 1,   0, 1, 0, 1);
+                                                         // | 01 02 03 04 | 05 06 07 08 | 09 10 11 12 | 13 14 15 16 |
+    $drum_pattern[0]['closed_hihat']['measure_two'] = array(  0, 1, 0, 1,   0, 1, 0, 1,   0, 1, 0, 1,   0, 1, 0, 1);
+    $drum_pattern[0]['closed_hihat']['measure_three'] = $drum_pattern[0]['closed_hihat']['measure_one'];
+    $drum_pattern[0]['closed_hihat']['measure_four'] = $drum_pattern[0]['closed_hihat']['measure_one'];
+
+    // Open Hi-Hat                                          | 01 02 03 04 | 05 06 07 08 | 09 10 11 12 | 13 14 15 16 |
+    $drum_pattern[0]['open_hihat']['measure_one'] =   array(  0, 0, 1, 0,   0, 0, 1, 0,   0, 0, 1, 0,   0, 0, 1, 0);
+                                                         // | 01 02 03 04 | 05 06 07 08 | 09 10 11 12 | 13 14 15 16 |
+    $drum_pattern[0]['open_hihat']['measure_two'] =   array(  0, 0, 1, 0,   0, 0, 1, 0,   0, 0, 1, 0,   0, 0, 1, 0);
+    $drum_pattern[0]['open_hihat']['measure_three'] = $drum_pattern[0]['open_hihat']['measure_one'];
+    $drum_pattern[0]['open_hihat']['measure_four'] = $drum_pattern[0]['open_hihat']['measure_one'];
+
+    return $drum_pattern;
+  }
+
+  public function random_drum_selector() {
+
+    // Count the number of drum patterns available
+    $num_drum_patterns = count($this->patterns);
+
+    // Create a new dice object
+    $dice = new Dice();
+
+    // Get a random drum pattern position
+    $selected_drum_position = $dice->roll(1, $num_drum_patterns) - 1;
+
+    // Return the selected drum position
+    return $selected_drum_position;
+  }
+
+}
+
+/*
+// Template for drum pattern
+
+    // Kick                                                 | 01 02 03 04 | 05 06 07 08 | 09 10 11 12 | 13 14 15 16 |
+    $drum_pattern[0]['kick']['measure_one'] =         array(  0, 0, 0, 0,   0, 0, 0, 0,   0, 0, 0, 0,   0, 0, 0, 0);
+    $drum_pattern[0]['kick']['measure_two'] = $drum_pattern[0]['kick']['measure_one'];
+    $drum_pattern[0]['kick']['measure_three'] = $drum_pattern[0]['kick']['measure_one'];
+    $drum_pattern[0]['kick']['measure_four'] = $drum_pattern[0]['kick']['measure_one'];
+
+    // Snare                                                | 01 02 03 04 | 05 06 07 08 | 09 10 11 12 | 13 14 15 16 |
+    $drum_pattern[0]['snare']['measure_one'] =        array(  0, 0, 0, 0,   0, 0, 0, 0,   0, 0, 0, 0,   0, 0, 0, 0);
+    $drum_pattern[0]['snare']['measure_two'] = $drum_pattern[0]['snare']['measure_one'];
+    $drum_pattern[0]['snare']['measure_three'] = $drum_pattern[0]['snare']['measure_one'];
+    $drum_pattern[0]['snare']['measure_four'] = $drum_pattern[0]['snare']['measure_one'];
+
+    // Closed Hi-Hat                                        | 01 02 03 04 | 05 06 07 08 | 09 10 11 12 | 13 14 15 16 |
+    $drum_pattern[0]['closed_hihat']['measure_one'] = array(  0, 0, 0, 0,   0, 0, 0, 0,   0, 0, 0, 0,   0, 0, 0, 0);
+    $drum_pattern[0]['closed_hihat']['measure_two'] = $drum_pattern[0]['closed_hihat']['measure_one'];
+    $drum_pattern[0]['closed_hihat']['measure_three'] = $drum_pattern[0]['closed_hihat']['measure_one'];
+    $drum_pattern[0]['closed_hihat']['measure_four'] = $drum_pattern[0]['closed_hihat']['measure_one'];
+
+    // Open Hi-Hat                                          | 01 02 03 04 | 05 06 07 08 | 09 10 11 12 | 13 14 15 16 |
+    $drum_pattern[0]['open_hihat']['measure_one'] =   array(  0, 0, 0, 0,   0, 0, 0, 0,   0, 0, 0, 0,   0, 0, 0, 0);
+    $drum_pattern[0]['open_hihat']['measure_two'] = $drum_pattern[0]['open_hihat']['measure_one'];
+    $drum_pattern[0]['open_hihat']['measure_three'] = $drum_pattern[0]['open_hihat']['measure_one'];
+    $drum_pattern[0]['open_hihat']['measure_four'] = $drum_pattern[0]['open_hihat']['measure_one'];
+
+*/
+
+?>

@@ -1,0 +1,46 @@
+<?php
+/**
+ * Install the Music module
+ *
+ * @file
+ */
+
+/**
+ * Implements hook_install().
+ */
+function music_install() {
+
+  // Create variables here.
+  variable_set('music_cache_duration', '+1 hour');
+  variable_set('music_debug', FALSE);
+
+} // function music_install()
+
+/**
+ * Implements hook_uninstall().
+ */
+function music_uninstall() {
+
+  // Remove variables here
+  variable_del('music_cache_duration');
+  variable_del('music_debug');
+
+} // function music_uninstall()
+
+/**
+ * Implements hook_schema().
+ */
+function music_schema() {
+  $schema['music_placeholder'] = array(
+    'description' => 'The base table for the music module.',
+    'fields' => array(
+      'id' => array(
+        'description' => t('Auto-incrementing primary key.'),
+        'type' => 'serial',
+      ),
+    ),
+    'primary key' => array('id'),
+  );
+
+  return $schema;
+} // function music_schema()
