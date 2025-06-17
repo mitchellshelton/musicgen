@@ -2,5 +2,8 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/legacy-versions/music-theory-class" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/legacy-versions/song-builder" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/legacy-versions/songgen" vcs="Git" />
   </component>
 </project>
