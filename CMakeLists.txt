@@ -7,4 +7,6 @@ add_executable(music main.cpp
         dice.cpp
         dice.h
         music_theory.cpp
-        music_theory.h)
+        music_theory.h
+        progression.cpp
+        progression.h)

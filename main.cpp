@@ -1,32 +1,37 @@
 #include <iostream>
-#include "dice.h"
 #include "music_theory.h"
+#include "progression.h"
 
 int main() {
   std::cout << "Welcome to the Music Generator" << std::endl;
 
-  // TODO:
-  // DONE - Dice Class
-  // DONE - dice.cpp
-  // DONE - - Test by rolling a die in main
-  // Music Theory Class
-  // music_theory.cpp
-  // - Test by building a progression manually in main
-  // Progression Class
-  // progression.cpp
-  // - Test by calling from main (final deployment method)
+  // Use random key and length
+  Progression progression;
 
-  Dice dice;
-  std::cout << "Roll 1: 2D4" << std::endl;
-  std::cout << Dice::roll(2, 4) << std::endl;
-  std::cout << "Roll 2: 3D8" << std::endl;
-  std::cout << Dice::roll(3, 8) << std::endl;
-  std::cout << "Roll 3: 1D20" << std::endl;
-  std::cout << Dice::roll(1, 20) << std::endl;
+  // Use specified key and length
+  //Key key = { "C", "Major" }; // quality, note
+  //int length = 4;
+  //Progression progression(key, length);
 
-  // MusicTheory theory;
-  // ScaleData scales = theory.getScales();
+  auto song = progression.get_progression();
 
+  std::cout << "Key: " << song.properties.key.note << " " << song.properties.key.quality << "\n";
+  std::cout << "Length: " << song.properties.length << "\n";
+
+  std::cout << "Progression: ";
+  for (const auto& step : song.progression) {
+    std::cout << step << " ";
+  }
+  std::cout << "\n";
+
+  std::cout << "Chords:\n";
+  for (const auto& chord : song.properties.chords) {
+    for (const auto& note : chord) {
+      std::cout << note << " ";
+    }
+    std::cout << "\n";
+  }
 
   return 0;
 }
+

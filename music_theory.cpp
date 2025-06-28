@@ -9,7 +9,7 @@ MusicTheory::MusicTheory() {
 }
 
 void MusicTheory::build_data() {
-  SongScale song_scale = {
+  song_scale = {
     {
       "Major", {
         "C",
@@ -49,7 +49,7 @@ void MusicTheory::build_data() {
   // Scales
   // # = sharp, b = flat, ## = double sharp, bb = double flat
   // Define our vector structure
-  ScaleData scales = {
+  scales = {
     {"Major", {
       { "Cb", { "Cb", "Db", "Eb", "Fb", "Gb", "Ab", "Bb" }},
       { "C", { "C", "D", "E", "F", "G", "A", "B" }},
@@ -123,12 +123,12 @@ void MusicTheory::build_data() {
   };
 
   // lower case i = minor, upper case I = major, * = diminished
-  ChordProgressionPattern chord_progression_pattern = {
+  chord_progression_pattern = {
     { "Major", { "I", "ii", "iii", "IV", "V", "vi", "vii*" }},
     { "Minor", { "i", "ii*", "III", "iv", "v", "VI", "VII" }}
   };
 
-  TheoreticalNotes theoretical_notes = {
+  theoretical_notes = {
     { "Double Flats", {
       { "C", { "Bb" } },
       { "D", { "C" } },

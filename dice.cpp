@@ -3,6 +3,7 @@
 //
 #include <random>
 #include "dice.h"
+
 using namespace std;
 
 // Get a random number between two numbers
